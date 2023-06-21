@@ -14,7 +14,7 @@ class Event {
     this.rigor_rank = rigor_rank;
   }
   
-  static async findById(eventId) {
+  static async find(eventId) {
     try {
       const db = getDb();
       const event = await db.collection("event")
