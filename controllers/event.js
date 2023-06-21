@@ -27,7 +27,7 @@ exports.getEvents = (req, res, next) => {
   let totalEvents;
 
   Event.fetchAll()
-    // .countDocuments()
+    .countDocuments()
     .then(numEvents => {
       totalEvents = numEvents;
       return Event.find()
