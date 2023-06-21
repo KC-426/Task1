@@ -75,7 +75,7 @@ exports.createEvent = (req, res, next) => {
     name: name,
     imagePath: imageName,
     tagline: tagline,
-    schedule: schedule,  schedule: schedule,
+    schedule: schedule,
     description: description,
     schedule: moderator,
     category: category,
