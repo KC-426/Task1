@@ -55,7 +55,7 @@ class Event {
       });
   }
 
-  static async deleteById(eventId) {
+  static async find(eventId) {
     try {
       const db = getDb();
       const result = await db.collection("event")

@@ -100,7 +100,7 @@ exports.createEvent = (req, res, next) => {
 
 exports.deleteEvent = (req, res, next) => {
   const eventId = req.params.eventId;
-  Event.findById(eventId)
+  Event.find({id: eventId})
     .then((event) => {
       if (!event) {
         const error = new Error("Could not find event.");
