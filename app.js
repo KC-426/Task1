@@ -9,6 +9,8 @@ const app = express();
 
 const eventRoutes = require('./routes/event');
 
+app.use(bodyParser.json());
+
 app.use((error, req, res, next) => {
   console.log(error);
   const status = error.statusCode || 500;
@@ -16,8 +18,6 @@ app.use((error, req, res, next) => {
   const data = error.data;
   res.status(status).json({ message: message, data: data });
 });
-
-app.use(bodyParser.json());
 
 app.use('/', eventRoutes);
 

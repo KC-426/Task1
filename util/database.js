@@ -9,6 +9,7 @@ const mongoConnect = callback => {
   )
     .then(client => {
       console.log('Connected!');
+      // console.log(client)
       _db = client.db();
       callback();
     })
