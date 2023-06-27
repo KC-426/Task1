@@ -4,7 +4,7 @@ const ITEMS_PER_PAGE = 5;
 
 exports.getEvent = (req, res, next) => {
   const eventId = req.params.eventId;
-  Event.find({id:eventId})
+  Event.find(eventId)
     .then((event) => {
       if (!event) {
         const error = new Error("Could not find event.");
@@ -14,29 +14,27 @@ exports.getEvent = (req, res, next) => {
       res.status(200).json({ message: "Event fetched.", event: event });
     })
     .catch((err) => {
-      if (!err.statusCode) {
-        err.statusCode = 500;
-      }
-      next(err);
+      console.log(err);
+      const error = new Error("Could not fetch event.");
+      error.statusCode = 500;
+      next(error);
     });
 };
 
-
 exports.getEvents = (req, res, next) => {
   const page = +req.query.page || 1;
+  const ITEMS_PER_PAGE = 10; 
   let totalEvents;
 
-  Event.fetchAll()
-    .countDocuments()
+  Event.countDocuments()
     .then(numEvents => {
       totalEvents = numEvents;
       return Event.find()
-        .skip((page - 1) * ITEMS_PER_PAGE)
-        .limit(ITEMS_PER_PAGE);
     })
     .then(events => {
-      res.status(200).render({ message: 'Events fetched', 
-        event: events,
+      res.status(200).json({
+        message: 'Events fetched',
+        events: events,
         currentPage: page,
         hasNextPage: ITEMS_PER_PAGE * page < totalEvents,
         hasPreviousPage: page > 1,
@@ -46,48 +44,46 @@ exports.getEvents = (req, res, next) => {
       });
     })
     .catch(err => {
-      const error = new Error(err);
-      error.httpStatusCode = 500;
-      return next(error);
+      console.log(err);
+      const error = new Error('Could not fetch events.');
+      error.statusCode = 500;
+      next(error);
     });
 };
 
 
 exports.createEvent = (req, res, next) => {
-
-  const name = req.file.name;
-  const file = req.file;
-  const tagline = req.body.tagline;
-  const schedule = req.body.schedule;
-  const description = req.body.description;
-  const moderator = req.body.moderator;
-  const category = req.body.category;
-  const sub_category = req.body.sub_category;
-  const rigor_rank = req.body.rigor_rank;
-
-  var imageName = 'file' + randomString.generate(7) + '.jpg'
-
-  path = __dirname + `/../uploads/${imageName}`
-  fs.createWriteStream(path).write(image.buffer)
-  console.log(path)
+  const { name, tagline, schedule, description, moderator, category, sub_category, rigor_rank } = req.body;
 
   const event = new Event({
     name: name,
-    imagePath: imageName,
     tagline: tagline,
     schedule: schedule,
     description: description,
-    schedule: moderator,
+    moderator: moderator, 
     category: category,
     sub_category: sub_category,
     rigor_rank: rigor_rank,
   });
+
   event
     .save()
     .then((result) => {
-      json.status(201).json({
+      const data = {
+        id: result._id,
+        name: result.name,
+        tagline: result.tagline,
+        schedule: result.schedule,
+        description: result.description,
+        moderator: result.moderator,
+        category: result.category,
+        sub_category: result.sub_category,
+        rigor_rank: result.rigor_rank,
+      };
+
+      res.status(201).json({
         message: "Event created successfully!",
-        event: event
+        event: event,
       });
     })
     .catch((err) => {
@@ -98,23 +94,37 @@ exports.createEvent = (req, res, next) => {
     });
 };
 
-exports.deleteEvent = (req, res, next) => {
+exports.updateEvent = (req, res, next) => {
   const eventId = req.params.eventId;
-  Event.find({id: eventId})
+  const updatedEvent = req.body; 
+
+  Event.update(eventId, updatedEvent, { new: true })
     .then((event) => {
       if (!event) {
         const error = new Error("Could not find event.");
         error.statusCode = 404;
         throw error;
       }
-    })
-    .then((result) => {
-      res.status(200).json({ message: "Deleted event." });
+      res.status(200).json({ message: "Event updated.", event: event });
     })
     .catch((err) => {
-      if (!err.statusCode) {
-        err.statusCode = 500;
-      }
-      next(err);
+      console.log(err);
+      const error = new Error("Unable to update event.");
+      error.statusCode = 500;
+      next(error);
+    });
+};
+
+exports.deleteEvent = (req, res, next) => {
+  const eventId = req.params.eventId;
+  Event.deleteOne(eventId)
+    .then(() => {
+      res.status(200).json({ message: 'Deleted event.' });
+    })
+    .catch((err) => {
+      console.log(err);
+      const error = new Error('Could not delete event.');
+      error.statusCode = 500;
+      next(error);
     });
 };

@@ -1,6 +1,4 @@
 const path = require('path');
-const multer = require('multer')
-var upload = multer({storage: multer.memoryStorage()})
 
 const express = require('express');
 
@@ -12,7 +10,9 @@ router.get('/event/:eventId', eventController.getEvent);
 
 router.get('/events', eventController.getEvents)
 
-router.post('/create-event',upload.single('file'), eventController.createEvent)
+router.post('/create-event', eventController.createEvent)
+
+router.post('/update-event', eventController.updateEvent)
 
 router.delete('/delete-event', eventController.deleteEvent)
 
