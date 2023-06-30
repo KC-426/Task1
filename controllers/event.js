@@ -66,7 +66,6 @@ exports.createEvent = (req, res, next) => {
   };
 
   const event = new Event(eventData);
-
   event
     .save()
     .then((result) => {
@@ -80,28 +79,6 @@ exports.createEvent = (req, res, next) => {
         err.statusCode = 500;
       }
       next(err);
-    });
-};
-
-
-exports.updateEvent = (req, res, next) => {
-  const eventId = req.params.eventId;
-  const updatedEvent = req.body; 
-
-  Event.update(eventId, updatedEvent, { new: true })
-    .then((event) => {
-      if (!event) {
-        const error = new Error("Could not find event.");
-        error.statusCode = 404;
-        throw error;
-      }
-      res.status(200).json({ message: "Event updated.", event: event });
-    })
-    .catch((err) => {
-      console.log(err);
-      const error = new Error("Unable to update event.");
-      error.statusCode = 500;
-      next(error);
     });
 };
 

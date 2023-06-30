@@ -12,8 +12,6 @@ router.get('/events', eventController.getEvents)
 
 router.post('/create-event', eventController.createEvent)
 
-router.post('/update-event', eventController.updateEvent)
-
 router.delete('/delete-event', eventController.deleteEvent)
 
 module.exports = router;

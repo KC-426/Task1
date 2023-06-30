@@ -58,21 +58,6 @@ class Event {
       });
   }
 
-  static async update(eventId, updatedEvent) {
-    try {
-      const db = getDb();
-      const result = await db.collection("event").updateOne({ _id: new ObjectId(eventId) }, { $set: updatedEvent });
-      if (result.matchedCount === 0) {
-        const error = new Error("Could not find event.");
-        error.statusCode = 404;
-        throw error;
-      }
-      return result;
-    } catch (err) {
-      console.log(err);
-    }
-  }
-
   static async deleteOne(eventId) {
     try {
       const db = getDb();

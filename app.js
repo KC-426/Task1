@@ -22,5 +22,5 @@ app.use((error, req, res, next) => {
 app.use('/', eventRoutes);
 
 mongoConnect(() => {
-  app.listen(4000);
+  app.listen(3000);
 });
