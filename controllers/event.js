@@ -53,37 +53,26 @@ exports.getEvents = (req, res, next) => {
 
 
 exports.createEvent = (req, res, next) => {
-  const { name, tagline, schedule, description, moderator, category, sub_category, rigor_rank } = req.body;
+  const eventData = {
+    _id: req.body._id,
+    name: req.body.name,
+    tagline: req.body.tagline,
+    schedule: req.body.schedule,
+    description: req.body.description,
+    moderator: req.body.moderator,
+    category: req.body.category,
+    sub_category: req.body.sub_category,
+    rigor_rank: req.body.rigor_rank
+  };
 
-  const event = new Event({
-    name: name,
-    tagline: tagline,
-    schedule: schedule,
-    description: description,
-    moderator: moderator, 
-    category: category,
-    sub_category: sub_category,
-    rigor_rank: rigor_rank,
-  });
+  const event = new Event(eventData);
 
   event
     .save()
     .then((result) => {
-      const data = {
-        id: result._id,
-        name: result.name,
-        tagline: result.tagline,
-        schedule: result.schedule,
-        description: result.description,
-        moderator: result.moderator,
-        category: result.category,
-        sub_category: result.sub_category,
-        rigor_rank: result.rigor_rank,
-      };
-
       res.status(201).json({
         message: "Event created successfully!",
-        event: event,
+        event
       });
     })
     .catch((err) => {
@@ -93,6 +82,7 @@ exports.createEvent = (req, res, next) => {
       next(err);
     });
 };
+
 
 exports.updateEvent = (req, res, next) => {
   const eventId = req.params.eventId;
@@ -119,7 +109,7 @@ exports.deleteEvent = (req, res, next) => {
   const eventId = req.params.eventId;
   Event.deleteOne(eventId)
     .then(() => {
-      res.status(200).json({ message: 'Deleted event.' });
+      res.status(200).json({ message: 'Event deleted.' });
     })
     .catch((err) => {
       console.log(err);
