@@ -11,6 +11,13 @@ const eventRoutes = require('./routes/event');
 
 app.use(bodyParser.json());
 
+app.use((req, res, next) => {
+  res.setHeader("Content-Type", "application/json");
+  // res.setHeader("Access-Control-Allow-Methods", "OPTIONS, GET, POST, PUT, PATCH, DELETE");
+  // res.setHeader("Access-Control-Allow-Headers", "Content-Type, Authorization");
+  next();
+}); 
+
 app.use((error, req, res, next) => {
   console.log(error);
   const status = error.statusCode || 500;
@@ -22,5 +29,5 @@ app.use((error, req, res, next) => {
 app.use('/', eventRoutes);
 
 mongoConnect(() => {
-  app.listen(3000);
+  app.listen(4000);
 });

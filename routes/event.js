@@ -6,12 +6,12 @@ const eventController = require('../controllers/event');
 
 const router = express.Router();
 
-router.get('/event/:eventId', eventController.getEvent);
+router.get('/event/:eventId', eventController.getEvent)
 
 router.get('/events', eventController.getEvents)
 
 router.post('/create-event', eventController.createEvent)
 
-router.delete('/delete-event', eventController.deleteEvent)
+router.delete('/event/:eventId', eventController.deleteEvent)
 
 module.exports = router;

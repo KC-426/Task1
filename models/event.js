@@ -13,15 +13,16 @@ class Event {
     this.rigor_rank = rigor_rank;
   }
 
-  static async find(eventId) {
+  static async findOne(eventId) {
     try {
       const db = getDb();
-      const event = await db.collection("event").findOne({ _id: new ObjectId(eventId) });
+      const event = await db.collection("events").findOne({ _id: new mongodb.ObjectId(eventId) });
       return event;
     } catch (err) {
       console.log(err);
     }
   }
+  
     
   static async countDocuments() {
     try {
@@ -47,7 +48,7 @@ class Event {
     const db = getDb();
     return db
       .collection("events")
-      .insert(this)
+      .insertOne(this)
       .then((result) => {
         console.log(result);
         return result;
@@ -61,16 +62,17 @@ class Event {
   static async deleteOne(eventId) {
     try {
       const db = getDb();
-      const result = await db.collection('event').deleteOne({ _id: new ObjectId(eventId) });
-      if (result.deletedCount === 1) {
-        console.log('Event deleted successfully');
-      } else {
-        console.log('Event not found');
-      }
+      const result = await db.collection('events').deleteOne({ _id: new mongodb.ObjectId(eventId) });
+      // if (result.deletedCount === 1) {
+      //   console.log('Event deleted successfully');
+      // } else {
+      //   console.log('Event not found');
+      // }
     } catch (err) {
       console.log(err);
     }
   }
+
 
 }
 
