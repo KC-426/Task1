@@ -18,7 +18,6 @@ app.use((req, res, next) => {
   next();
 }); 
 
-console.log('data')
 
 app.use((error, req, res, next) => {
   console.log(error);
