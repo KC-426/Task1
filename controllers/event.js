@@ -87,21 +87,62 @@ exports.createEvent = (req, res, next) => {
     });
 };
 
+exports.updateEvent = (req, res, next) => {
+  const eventId = req.params.eventId;
+
+ const name = req.body.name
+ const tagline = req.body.tagline
+ const schedule = req.body.schedule
+ const description = req.body.description
+ const moderator = req.body.moderator
+ const category = req.body.category
+ const sub_category = req.body.sub_category
+ const rigor_rank = req.body.rigor_rank
+
+ Event.findByIdandUpdate(eventId)
+ .then((event) => {
+   if (!event) {
+     const error = new Error("Could not find event.");
+     error.statusCode = 404;
+     throw error;
+   }
+
+   event.name = name;
+   event.tagline = tagline;
+   event.schedule = schedule;
+   event.description = description;
+   event.moderator = moderator;
+   event.category = category;
+   event.sub_category = sub_category;
+   event.rigor_rank = rigor_rank;
+
+   return event.save();
+ })
+ .then((result) => {
+   res.status(200).json({ message: "Event updated!", event: result });
+ })
+ .catch((err) => {
+   if (!err.statusCode) {
+     err.statusCode = 500;
+   }
+   next(err);
+ });
+};
+
 
 exports.deleteEvent = (req, res, next) => {
   const eventId = req.params.eventId;
-  console.log("Event deleted with this id: " + eventId);
-  Event.deleteOne(eventId)
-    .then((event) => {
-      if (!event) {
-        res.status(404).json({ msg: "No event found" });
-      }
-      res.status(200).json({ message: "Event deleted." });
-    })
-    .catch((err) => {
-      console.log(err);
-      const error = new Error("Could not delete event.");
-      error.statusCode = 500;
-      next(error);
-    });
+
+  Event.deleteOne({ _id: eventId })
+      .then(event => {
+          if (eventId.stringToHex(stringValue) === event._id.stringToHex(stringValue)) {
+              res.status(200).json({ msg: 'Event deleted successfully' });
+          } else {
+              res.status(404).json({ msg: 'Event not found' });
+          }
+      })
+      .catch(error => {
+          console.error(error);
+          res.status(500).json({ msg: 'Error deleting event' });
+      });
 };

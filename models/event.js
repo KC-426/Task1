@@ -59,17 +59,24 @@ class Event {
       });
   }
 
+  static async findByIdandUpdate(eventId) {
+    try {
+      const db = getDb();
+      const event = await await db.collection("events").findByIdandUpdate({ _id: new mongodb.ObjectId(eventId) });
+      return event;
+    } catch (err) {
+      console.log(err);
+    }
+    }
+  
   static async deleteOne(eventId) {
     try {
       const db = getDb();
       const result = await db.collection('events').deleteOne({ _id: new mongodb.ObjectId(eventId) });
-      // if (result.deletedCount === 1) {
-      //   console.log('Event deleted successfully');
-      // } else {
-      //   console.log('Event not found');
-      // }
+      return result;
     } catch (err) {
       console.log(err);
+      throw err; 
     }
   }
 
